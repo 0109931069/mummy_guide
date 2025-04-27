@@ -1,0 +1,329 @@
+import 'package:mummy_guide/utils/globals.dart';
+// import 'package:mummy_guide/utils/size_conf.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mummy_guide/controllers/auth_controller.dart';
+import 'package:mummy_guide/locale/app_locale.dart';
+import 'package:mummy_guide/main.dart';
+import 'package:mummy_guide/providers/create_account_provider.dart';
+import 'package:mummy_guide/utils/assets_utils.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+
+class CreateAccountScreen extends StatelessWidget {
+  TextEditingController emailController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController fullNameController = TextEditingController();
+  TextEditingController passController = TextEditingController();
+  TextEditingController confirmPassController = TextEditingController();
+
+  CreateAccountScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final createAccountProvider = Provider.of<CreateAccountProvider>(
+      context,
+    );
+
+    return Directionality(
+      textDirection: localization.currentLocale.localeIdentifier == "ar"
+          ? TextDirection.rtl
+          : TextDirection.ltr,
+      child: Scaffold(
+        backgroundColor: Globals.white,
+        body: createAccountProvider.isLoading
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 20,
+                  horizontal: 20,
+                ),
+                shrinkWrap: true,
+                physics: const ClampingScrollPhysics(),
+                children: [
+                  const SizedBox(height: 50,),
+                  SizedBox(
+                    height: 130,
+                    child: Image.asset(
+                    AssetsUtils.logo,
+                    // width: (MediaQuery.sizeOf(context).width - 60) * 0.5,
+                  ),
+                  ),
+                  
+                  
+                   AnimatedTextKit(
+                animatedTexts: [
+                  ColorizeAnimatedText(
+                    'Mummy Guide',
+                    textAlign: TextAlign.center,
+                    textStyle: GoogleFonts.agbalumo(
+                      fontSize: 37,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    colors: [
+                      const Color(0xFFED2E7C),
+                      const Color(0xFFFF8EA2),
+                      const Color(0xFFED2E7C),
+                    ],
+                  ),
+                ],
+                isRepeatingAnimation: true,
+                repeatForever: true,
+              ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Optional: You can add a label here if needed
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      //   child: Text(
+                      //     AppLocale.enter_your_email_label.getString(context),
+                      //     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      //   ),
+                      // ),
+                      
+                      // TextField for email input
+                      TextField(
+                        controller: emailController,
+                        decoration: InputDecoration(
+                          hintText: AppLocale.enter_your_email_label.getString(context),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Optional: You can add a label here if needed
+                        // Padding(
+                        //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        //   child: Text(
+                        //     AppLocale.enter_your_fullname_label.getString(context),
+                        //     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                        //   ),
+                        // ),
+                        
+                        // TextField for full name input
+                        TextField(
+                          controller: fullNameController,
+                          decoration: InputDecoration(
+                            hintText: AppLocale.enter_your_fullname_label.getString(context),
+                            filled: true,
+                            fillColor: Colors.transparent,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(10),
+                              borderSide: const BorderSide(color: Colors.grey),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Optional: You can add a label here if needed
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      //   child: Text(
+                      //     AppLocale.enter_your_phone_label.getString(context),
+                      //     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      //   ),
+                      // ),
+                      
+                      // TextField for phone number input
+                      TextField(
+                        controller: phoneController,
+                        keyboardType: TextInputType.phone, // Set keyboard type for phone input
+                        decoration: InputDecoration(
+                          hintText: AppLocale.enter_your_phone_label.getString(context),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                 Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Optional: You can add a label here if needed
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      //   child: Text(
+                      //     AppLocale.enter_your_password_label.getString(context),
+                      //     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      //   ),
+                      // ),
+                      
+                      // TextField for password input
+                      TextField(
+                        controller: passController,
+                        obscureText: true, // Hides the text input for password
+                        decoration: InputDecoration(
+                          hintText: AppLocale.enter_your_password_label.getString(context),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                 Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Optional: You can add a label here if needed
+                      // Padding(
+                      //   padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      //   child: Text(
+                      //     AppLocale.confirm_your_password_label.getString(context),
+                      //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      //   ),
+                      // ),
+                      
+                      // TextField for confirming password input
+                      TextField(
+                        controller: confirmPassController,
+                        obscureText: true, // Hides the text input for password confirmation
+                        decoration: InputDecoration(
+                          hintText: AppLocale.confirm_your_password_label.getString(context),
+                          filled: true,
+                          fillColor: Colors.transparent,
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            borderSide: const BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(
+                         width: (MediaQuery.sizeOf(context).width - 40) * 0.5,
+                         height: (MediaQuery.sizeOf(context).height - 40) * 0.065,
+                        child: FilledButton(
+                          
+                          onPressed: () async {
+                            if (emailController.text == "") {
+                              Fluttertoast.showToast(
+                                msg: "Please enter your email!!",
+                              );
+                              return;
+                            }
+                                
+                            if (passController.text == "") {
+                              Fluttertoast.showToast(
+                                msg: "Please enter your password!!",
+                              );
+                              return;
+                            }
+                                
+                            if (confirmPassController.text == "") {
+                              Fluttertoast.showToast(
+                                msg: "Please confirm your password!!",
+                              );
+                              return;
+                            }
+                                
+                            if (confirmPassController.text !=
+                                passController.text) {
+                              Fluttertoast.showToast(
+                                msg: "Passwords don't match!!",
+                              );
+                              return;
+                            }
+                                
+                            if (fullNameController.text == "") {
+                              Fluttertoast.showToast(
+                                msg: "Please enter your full name!!",
+                              );
+                              return;
+                            }
+                                
+                            createAccountProvider.toggleLoading();
+                                
+                            try {
+                              var res = await AuthController.createAccount(
+                                {
+                                  "email":
+                                      emailController.text.toLowerCase().trim(),
+                                  "password": passController.text,
+                                  "fullName": fullNameController.text,
+                                  "phone": phoneController.text,
+                            
+                                },
+                              );
+                              print("create account status $res");
+                              if (res["result"] == true) {
+                                Navigator.of(context).pop();
+                              } else {
+                                Fluttertoast.showToast(
+                                  msg: res["message"].toString(),
+                                );
+                              }
+                            } catch (e) {
+                              print(e.toString());
+                            }
+                                
+                            createAccountProvider.toggleLoading();
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: WidgetStateProperty.all(
+                              Globals.btncolor,
+                            ),
+                          ),
+                          child: Text(
+                            AppLocale.signup_label.getString(
+                              context,
+                            ),
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+}

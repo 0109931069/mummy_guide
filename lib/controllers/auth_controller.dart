@@ -1,0 +1,293 @@
+
+import 'package:flutter/material.dart';
+// import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:mummy_guide/main.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
+
+class AuthController {
+  // static Future<Map<String, dynamic>> signwithgoogle()async{
+  //   try {
+
+  //     GoogleSignIn googleSignIn = GoogleSignIn(
+  //       clientId: dotenv.env["GOOGLE_CLIENT_ID"].toString(),
+  //     );
+  //     var account = await googleSignIn.signIn();
+  //     if (account == null){
+  //       return{
+  //         "result": false,
+  //         "message": "No account Selected",
+  //       };
+  //     }
+  //     final googleUser = await googleSignIn.signIn();
+  //     final googleAuth = await googleUser!.authentication;
+  //     final accessToken = googleAuth.accessToken;
+  //     final idToken = googleAuth.idToken;
+  //     if (accessToken == null) {
+  //       throw 'No Access Token found.';
+  //     }
+  //     if (idToken == null) {
+  //       throw 'No ID Token found.';
+  //     }
+  //     final response = await Supabase.instance.client.auth.signInWithIdToken(
+  //       provider: OAuthProvider.google,
+  //       idToken: idToken,
+  //       accessToken: accessToken,
+  //     );
+
+  //     return{
+  //       "result":true,
+  //       "message": "signed in sucessfully",
+  //     };
+  //   }on AuthException catch (e) {
+  //     print(e.toString());
+  //     return{
+  //       "result": false,
+  //       "message": e.toString(),
+  //     };
+  //   }
+
+  // }
+
+  static Future<void> setAuth(Map<String, dynamic> data) async {
+    try {
+      await secureStorage.write(
+        key: "is_logged_in",
+        value: true.toString(),
+      );
+      await secureStorage.write(
+        key: "login_email",
+        value: data["email"].toString(),
+      );
+      await secureStorage.write(
+        key: "login_password",
+        value: data["password"].toString(),
+      );
+      await secureStorage.write(
+        key: "uid",
+        value: data["uid"].toString(),
+      );
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  static Future<void> purgeAuth() async {
+    try {
+      await secureStorage.delete(key: "is_logged_in");
+      await secureStorage.delete(key: "login_email");
+      await secureStorage.delete(key: "login_password");
+      await secureStorage.delete(key: "uid");
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  static Future<Map<String, dynamic>> createAccount(
+      Map<String, dynamic> data) async {
+    try {
+     
+      var res = await Supabase.instance.client.auth.signUp(
+        password: data["password"].toString(),
+        email: data["email"].toString(),
+        data: {
+          ...data,
+        },
+      );
+
+      if (res.user == null) {
+        return {
+          "result": false,
+          "message": "Error while create account!!",
+        };
+      }
+
+      await Supabase.instance.client.from("users").insert({
+        "user_id": res.user!.id,
+        "email": data["email"].toString().toLowerCase().trim(),
+        "full_name": data["fullName"].toString(),
+        "phone": data["phone"].toString(),
+      });
+
+      return {
+        "result": true,
+        "message": "Created account successfully ... ",
+        "data": {
+          ...res.user!.toJson(),
+        },
+      };
+    } on AuthException catch (e) {
+      debugPrint(e.message.toString());
+      return {
+        "result": false,
+        "message": e.message,
+      };
+    }
+  }
+
+  static Future<Map<String, dynamic>> login(
+      String email, String password) async {
+    try {
+      var res = await Supabase.instance.client.auth.signInWithPassword(
+        password: password,
+        email: email.toLowerCase().trim(),
+      );
+
+      if (res.user == null) {
+        return {
+          "result": false,
+          "message": "Error while login!!",
+        };
+      }
+
+      await setAuth({
+        "email": email.toLowerCase().trim(),
+        "password": password,
+        "uid": res.user!.id,
+      });
+
+      return {
+        "result": true,
+        "message": "Logged in successfully ... ",
+        "data": {
+          ...res.user!.toJson(),
+        },
+      };
+    } on AuthException catch (e) {
+      debugPrint(e.message.toString());
+      return {
+        "result": false,
+        "message": e.message,
+      };
+    }
+  }
+
+  static Future<Map<String, dynamic>> checkLogin() async {
+    try {
+      bool isLoggedIn = (await secureStorage.read(key: "is_logged_in")) == null
+          ? false
+          : bool.parse((await secureStorage.read(key: "is_logged_in"))!);
+      if (isLoggedIn == false) {
+        return {
+          "result": false,
+          "message": "Please login again!!",
+        };
+      }
+      
+      // print(isLoggedIn);
+
+      var email = await secureStorage.read(key: "login_email");
+      var password = await secureStorage.read(key: "login_password");
+
+      var res = await Supabase.instance.client.auth.signInWithPassword(
+        password: password!,
+        email: email!.toLowerCase().trim(),
+      );
+
+      if (res.user == null) {
+        return {
+          "result": false,
+          "message": "Error while login!!",
+        };
+      }
+
+      return {
+        "result": true,
+        "message": "Logged in successfully ... ",
+        "data": {
+          ...res.user!.toJson(),
+        },
+      };
+    } on AuthException catch (e) {
+      debugPrint(e.message.toString());
+      return {
+        "result": false,
+        "message": e.message,
+      };
+    }
+  }
+
+  static Future<void> logOut() async {
+    try {
+      try {
+        await Supabase.instance.client.auth.signOut();
+      } catch (e) {
+        debugPrint(e.toString());
+      }
+
+      try {
+        await purgeAuth();
+      } catch (e) {
+        debugPrint(e.toString());
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
+
+  static Future<Map<String, dynamic>> getCurrentUserData() async {
+    try {
+      var uid = await secureStorage.read(
+        key: "uid",
+      );
+
+      if (uid == null) {
+        return {
+          "result": false,
+          "message": "Please login again!!",
+        };
+      }
+
+      var res = Supabase.instance.client.auth.currentUser!.toJson();
+
+      // print(res);
+
+      return {
+        "result": true,
+        "message": "Retrieved successfully .. ",
+        "data": res,
+      };
+    } catch (e) {
+      return {
+        "result": false,
+        "message": e.toString(),
+      };
+    }
+  }
+
+  static Future<Map<String, dynamic>> updateCurrentUserData(
+      Map<String, dynamic> data) async {
+    try {
+      await Supabase.instance.client.auth.updateUser(UserAttributes(data: {
+        ...data,
+      }));
+
+      return {
+        "result": true,
+        "message": "Updated successfully ... ",
+      };
+    } catch (e) {
+      debugPrint(e.toString());
+      return {
+        "result": false,
+        "message": e.toString(),
+      };
+    }
+  }
+  static Future<Map<String, dynamic>>forgetPassword(String Email)async{
+    try{
+      await Supabase.instance.client.auth.resetPasswordForEmail(Email);
+      return{
+        "result": true,
+        "message": " linke has been sent sucessfully t your email",
+      };
+    }
+    catch(e){
+      print(e.toString());
+      return{
+        "result": false,
+        "meassge": e.toString(),
+      };
+    }
+  }
+}

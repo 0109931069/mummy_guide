@@ -1,0 +1,203 @@
+import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_localization/flutter_localization.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:mummy_guide/controllers/posts_controller.dart';
+import 'package:mummy_guide/locale/app_locale.dart';
+
+class NewPostProvider with ChangeNotifier {
+  bool _isLoading = false;
+  bool get isLoading => _isLoading;
+
+  String _currentPostMode = "public";
+  String get currentPostMode => _currentPostMode;
+
+  final List<Map<String, dynamic>> _media = [];
+  List<Map<String, dynamic>> get media => _media;
+
+  int _currentPhotoIndex = 0;
+  int get currentPhotoIndex => _currentPhotoIndex;
+
+  Map<String, dynamic> _locationData = {};
+  Map<String, dynamic> get locationData => _locationData;
+
+  bool _isOccasionSelected = false;
+  bool get isOccasionSelected => _isOccasionSelected;
+
+  String _selectedOccasion = "new baby";
+  String get selectedOccasion => _selectedOccasion;
+
+  final TextEditingController _textController = TextEditingController();
+  TextEditingController get textController => _textController;
+
+  Future<void> onAdd(BuildContext context) async {
+    if (_textController.text == "") {
+      return;
+    }
+
+    toggleLoading();
+
+    try {
+      var res = await PostsController.addPost(
+        {
+          "content": jsonEncode({
+            "text": _textController.text,
+            "media": _media,
+            "location": _locationData,
+            "occasion": _selectedOccasion,
+          }),
+        },
+      );
+
+      if (res["result"] == true) {
+        Fluttertoast.showToast(
+          msg: AppLocale.posted_label.getString(
+            context,
+          ),
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: AppLocale.something_went_wrong_label.getString(
+            context,
+          ),
+        );
+      }
+
+      Navigator.of(context).pop();
+    } catch (e) {
+      print(e.toString());
+      Fluttertoast.showToast(
+        msg: AppLocale.something_went_wrong_label.getString(
+          context,
+        ),
+      );
+    }
+
+    toggleLoading();
+  }
+
+  setSelectedOccasion(String value) {
+    toggleLoading();
+
+    try {
+      _selectedOccasion = value;
+      _isOccasionSelected = true;
+      notifyListeners();
+    } catch (e) {
+      print(e.toString());
+    }
+
+    toggleLoading();
+  }
+
+  setIsOcassionSelected(bool value) {
+    _isOccasionSelected = value;
+    notifyListeners();
+  }
+
+  setLocationData(Map<String, dynamic> value) {
+    _locationData = value;
+    notifyListeners();
+  }
+
+  setCurrentPhotoIndex(int value) {
+    _currentPhotoIndex = value;
+    notifyListeners();
+  }
+
+  addNewMedia(Map<String, dynamic> data) {
+    _media.add(data);
+    notifyListeners();
+  }
+
+  addNewMedias(List<Map<String, dynamic>> data) {
+    _media.addAll(data);
+    notifyListeners();
+  }
+
+  clearMedia() {
+    _media.clear();
+    _textController.clear();
+    _locationData.clear();
+    notifyListeners();
+  }
+
+  setCurrentPostMode(String value) {
+    _currentPostMode = value;
+    notifyListeners();
+  }
+
+  List<Map<String, dynamic>> getVisibilityOptions(BuildContext context) {
+    List<Map<String, dynamic>> list = [
+      {
+        "label": AppLocale.friends_label.getString(
+          context,
+        ),
+        "value": "friends",
+        "icon": const Icon(
+          Icons.group,
+        ),
+      },
+      {
+        "label": AppLocale.public_label.getString(
+          context,
+        ),
+        "value": "public",
+        "icon": const Icon(
+          Icons.public,
+        ),
+      },
+      {
+        "label": AppLocale.only_me_label.getString(
+          context,
+        ),
+        "value": "only_me",
+        "icon": const Icon(
+          Icons.remove_red_eye,
+        ),
+      },
+    ];
+
+    return list;
+  }
+
+  List<Map<String, dynamic>> getOccasionsOptions(BuildContext context) {
+    List<Map<String, dynamic>> list = [
+      {
+        "label": AppLocale.new_baby_label.getString(
+          context,
+        ),
+        "value": "New Baby",
+        "icon": const Icon(
+          Icons.baby_changing_station_outlined,
+        ),
+      },
+      {
+        "label": AppLocale.engagement_label.getString(
+          context,
+        ),
+        "value": "engagement",
+        "icon": const Icon(
+          Icons.circle_outlined,
+        ),
+      },
+      {
+        "label": AppLocale.marriage_label.getString(
+          context,
+        ),
+        "value": "marriage",
+        "icon": const Icon(
+          Icons.female,
+        ),
+      },
+    ];
+
+    return list;
+  }
+
+  toggleLoading() {
+    _isLoading = !_isLoading;
+    notifyListeners();
+  }
+}
