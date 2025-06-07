@@ -238,7 +238,7 @@ class AuthController {
       await Supabase.instance.client.auth.resetPasswordForEmail(Email.toLowerCase().trim());
       return{
         "result": true,
-        "message": " linke has been sent sucessfully t your email",
+        "message": " link has been sent sucessfully t your email",
       };
     }
     catch(e){

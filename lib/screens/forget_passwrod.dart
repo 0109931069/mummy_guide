@@ -12,11 +12,16 @@ import 'package:mummy_guide/utils/assets_utils.dart';
 import 'package:mummy_guide/widgets/title_widget.dart';
 import 'package:provider/provider.dart';
 
-class ForgetPasswrod extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  // final TextEditingController passController = TextEditingController();
+class ForgetPasswrod extends StatefulWidget {
 
   ForgetPasswrod({super.key});
+
+  @override
+  State<ForgetPasswrod> createState() => _ForgetPasswrodState();
+}
+
+class _ForgetPasswrodState extends State<ForgetPasswrod> {
+  final TextEditingController emailController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {

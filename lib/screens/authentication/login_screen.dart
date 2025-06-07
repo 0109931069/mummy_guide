@@ -14,11 +14,18 @@ import 'package:mummy_guide/widgets/form_widget.dart';
 import 'package:mummy_guide/widgets/title_widget.dart';
 import 'package:provider/provider.dart';
 
-class LoginScreen extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passController = TextEditingController();
+class LoginScreen extends StatefulWidget {
 
   LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
+  final TextEditingController emailController = TextEditingController();
+
+  final TextEditingController passController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
