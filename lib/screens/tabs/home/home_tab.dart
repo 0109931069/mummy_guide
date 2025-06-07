@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:animate_do/animate_do.dart'; // Make sure to add this package for animations
+// Make sure to add this package for animations
 import 'package:mummy_guide/main.dart';
-import 'package:mummy_guide/utils/assets_utils.dart';
 import 'package:mummy_guide/utils/globals.dart';
 import 'package:mummy_guide/utils/size_conf.dart';
 import 'package:mummy_guide/widgets/wisdom_widget.dart'; // Adjust the import according to your project structure

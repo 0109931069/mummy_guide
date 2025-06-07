@@ -9,6 +9,8 @@ import 'package:mummy_guide/main.dart';
 import 'package:mummy_guide/providers/create_account_provider.dart';
 import 'package:mummy_guide/utils/assets_utils.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:mummy_guide/widgets/form_widget.dart';
+import 'package:mummy_guide/widgets/title_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 
@@ -45,187 +47,64 @@ class CreateAccountScreen extends StatelessWidget {
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 children: [
-                  const SizedBox(height: 50,),
+                  const SizedBox(
+                    height: 50,
+                  ),
                   SizedBox(
                     height: 130,
                     child: Image.asset(
-                    AssetsUtils.logo,
-                    // width: (MediaQuery.sizeOf(context).width - 60) * 0.5,
-                  ),
-                  ),
-                  
-                  
-                   AnimatedTextKit(
-                animatedTexts: [
-                  ColorizeAnimatedText(
-                    'Mummy Guide',
-                    textAlign: TextAlign.center,
-                    textStyle: GoogleFonts.agbalumo(
-                      fontSize: 37,
-                      fontWeight: FontWeight.bold,
+                      AssetsUtils.logo,
+                      // width: (MediaQuery.sizeOf(context).width - 60) * 0.5,
                     ),
-                    colors: [
-                      const Color(0xFFED2E7C),
-                      const Color(0xFFFF8EA2),
-                      const Color(0xFFED2E7C),
-                    ],
                   ),
-                ],
-                isRepeatingAnimation: true,
-                repeatForever: true,
-              ),
+                  TitleWidget(text: "MummyGuide"),
                   const SizedBox(
                     height: 30,
                   ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Optional: You can add a label here if needed
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      //   child: Text(
-                      //     AppLocale.enter_your_email_label.getString(context),
-                      //     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      //   ),
-                      // ),
-                      
-                      // TextField for email input
-                      TextField(
-                        controller: emailController,
-                        decoration: InputDecoration(
-                          hintText: AppLocale.enter_your_email_label.getString(context),
-                          filled: true,
-                          fillColor: Colors.transparent,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Colors.grey),
-                          ),
-                        ),
-                      ),
-                    ],
+                  FormWidget(
+                    controller: emailController,
+                    text: AppLocale.enter_your_email_label.getString(context),
                   ),
                   const SizedBox(
                     height: 25,
                   ),
-                  Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Optional: You can add a label here if needed
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        //   child: Text(
-                        //     AppLocale.enter_your_fullname_label.getString(context),
-                        //     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                        //   ),
-                        // ),
-                        
-                        // TextField for full name input
-                        TextField(
-                          controller: fullNameController,
-                          decoration: InputDecoration(
-                            hintText: AppLocale.enter_your_fullname_label.getString(context),
-                            filled: true,
-                            fillColor: Colors.transparent,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Colors.grey),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Optional: You can add a label here if needed
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      //   child: Text(
-                      //     AppLocale.enter_your_phone_label.getString(context),
-                      //     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      //   ),
-                      // ),
-                      
-                      // TextField for phone number input
-                      TextField(
-                        controller: phoneController,
-                        keyboardType: TextInputType.phone, // Set keyboard type for phone input
-                        decoration: InputDecoration(
-                          hintText: AppLocale.enter_your_phone_label.getString(context),
-                          filled: true,
-                          fillColor: Colors.transparent,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Colors.grey),
-                          ),
-                        ),
-                      ),
-                    ],
+                  FormWidget(
+                    controller: fullNameController,
+                    text:
+                        AppLocale.enter_your_fullname_label.getString(context),
                   ),
                   const SizedBox(
                     height: 25,
                   ),
-                 Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Optional: You can add a label here if needed
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      //   child: Text(
-                      //     AppLocale.enter_your_password_label.getString(context),
-                      //     style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      //   ),
-                      // ),
-                      
-                      // TextField for password input
-                      TextField(
-                        controller: passController,
-                        obscureText: true, // Hides the text input for password
-                        decoration: InputDecoration(
-                          hintText: AppLocale.enter_your_password_label.getString(context),
-                          filled: true,
-                          fillColor: Colors.transparent,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Colors.grey),
-                          ),
-                        ),
-                      ),
-                    ],
+                  FormWidget(
+                    controller: phoneController,
+                    keyboard: TextInputType
+                        .phone, // Set keyboard type for phone input
+
+                    text: AppLocale.enter_your_phone_label.getString(context),
                   ),
                   const SizedBox(
                     height: 25,
                   ),
-                 Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Optional: You can add a label here if needed
-                      // Padding(
-                      //   padding: const EdgeInsets.symmetric(vertical: 8.0),
-                      //   child: Text(
-                      //     AppLocale.confirm_your_password_label.getString(context),
-                      //     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                      //   ),
-                      // ),
-                      
-                      // TextField for confirming password input
-                      TextField(
-                        controller: confirmPassController,
-                        obscureText: true, // Hides the text input for password confirmation
-                        decoration: InputDecoration(
-                          hintText: AppLocale.confirm_your_password_label.getString(context),
-                          filled: true,
-                          fillColor: Colors.transparent,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            borderSide: const BorderSide(color: Colors.grey),
-                          ),
-                        ),
-                      ),
-                    ],
+                  FormWidget(
+                    controller: passController,
+                    obsecure: true, // Hides the text input for password
+
+                    text:
+                        AppLocale.enter_your_password_label.getString(context),
+                  ),
+                  const SizedBox(
+                    height: 25,
+                  ),
+                  FormWidget(
+                    // TextField for confirming password input
+
+                    controller: confirmPassController,
+                    obsecure:
+                        true, // Hides the text input for password confirmation
+
+                    text: AppLocale.confirm_your_password_label
+                        .getString(context),
                   ),
                   const SizedBox(
                     height: 30,
@@ -234,10 +113,10 @@ class CreateAccountScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       SizedBox(
-                         width: (MediaQuery.sizeOf(context).width - 40) * 0.5,
-                         height: (MediaQuery.sizeOf(context).height - 40) * 0.065,
+                        width: (MediaQuery.sizeOf(context).width - 40) * 0.5,
+                        height:
+                            (MediaQuery.sizeOf(context).height - 40) * 0.065,
                         child: FilledButton(
-                          
                           onPressed: () async {
                             if (emailController.text == "") {
                               Fluttertoast.showToast(
@@ -245,21 +124,21 @@ class CreateAccountScreen extends StatelessWidget {
                               );
                               return;
                             }
-                                
+
                             if (passController.text == "") {
                               Fluttertoast.showToast(
                                 msg: "Please enter your password!!",
                               );
                               return;
                             }
-                                
+
                             if (confirmPassController.text == "") {
                               Fluttertoast.showToast(
                                 msg: "Please confirm your password!!",
                               );
                               return;
                             }
-                                
+
                             if (confirmPassController.text !=
                                 passController.text) {
                               Fluttertoast.showToast(
@@ -267,16 +146,16 @@ class CreateAccountScreen extends StatelessWidget {
                               );
                               return;
                             }
-                                
+
                             if (fullNameController.text == "") {
                               Fluttertoast.showToast(
                                 msg: "Please enter your full name!!",
                               );
                               return;
                             }
-                                
+
                             createAccountProvider.toggleLoading();
-                                
+
                             try {
                               var res = await AuthController.createAccount(
                                 {
@@ -285,7 +164,6 @@ class CreateAccountScreen extends StatelessWidget {
                                   "password": passController.text,
                                   "fullName": fullNameController.text,
                                   "phone": phoneController.text,
-                            
                                 },
                               );
                               print("create account status $res");
@@ -299,7 +177,7 @@ class CreateAccountScreen extends StatelessWidget {
                             } catch (e) {
                               print(e.toString());
                             }
-                                
+
                             createAccountProvider.toggleLoading();
                           },
                           style: ButtonStyle(
@@ -314,7 +192,6 @@ class CreateAccountScreen extends StatelessWidget {
                             style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
-                            
                             ),
                           ),
                         ),

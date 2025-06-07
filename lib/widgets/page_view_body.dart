@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 // import 'package:mamy1/core/constants.dart';
 // import 'package:mamy1/core/widgets/space.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
+// import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:mummy_guide/utils/globals.dart';
 import 'package:mummy_guide/widgets/space.dart';
+import 'package:mummy_guide/widgets/title_widget.dart';
 
 class PageViewBody extends StatelessWidget{
     const PageViewBody({super.key, this.title, this.description, this.image});
@@ -22,26 +23,7 @@ class PageViewBody extends StatelessWidget{
            SizedBox(
             // width: 293,
             height: 44,
-            child: AnimatedTextKit(
-              animatedTexts: [
-                ColorizeAnimatedText(
-                  title!,
-                  
-                  textAlign: TextAlign.center,
-                  textStyle: GoogleFonts.agbalumo(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  colors: [
-                    const Color(0xFFED2E7C),
-                    const Color(0xFFFF8EA2),
-                    const Color(0xFFED2E7C),
-                  ],
-                ),
-              ],
-              isRepeatingAnimation: true,
-              repeatForever: true,
-            ),
+            child: TitleWidget(text: title!)
           ),
           const VerticalSpace(value: 5),
           Container(

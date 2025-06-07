@@ -72,10 +72,12 @@ mixin AppLocale {
   static const String your_phone_label = "Your Phone";
   static const String your_email_label = "Your Email";
   static const String your_username_label = "Your Name";
-  static const String forget_password_label = "Foregt Passsword ?";
+  static const String forget_password_label = "Foregt Passsword?";
+  static const String reset_password_label = "Reset Passsword?";
 
   static const Map<String, dynamic> EN = {
-    forget_password_label: "Forget Password ?",
+    forget_password_label: "Forget Password?",
+    reset_password_label: "Reset Password",
     community_label : "Community",
     your_phone_label : "Your Phone",
     your_email_label : "Your Email",
@@ -151,6 +153,7 @@ mixin AppLocale {
 
   static const Map<String, dynamic> AR = {
     forget_password_label: "نسيت كلمه المرور؟",
+    reset_password_label: "اعاده تعين كلمه المرور",
     community_label : "المجتع",
     your_phone_label : "رقم الهاتف",
     your_email_label : "البريد الالكتروني",
@@ -223,4 +226,6 @@ mixin AppLocale {
     language_label: "اللغة",
     dark_mode_label: "الوضع الليلي",
   };
+
+  var text;
 }

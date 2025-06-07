@@ -11,6 +11,7 @@ import 'package:mummy_guide/providers/timeline_provider.dart';
 import 'package:mummy_guide/utils/assets_utils.dart';
 import 'package:mummy_guide/utils/globals.dart';
 import 'package:mummy_guide/utils/size_conf.dart';
+import 'package:mummy_guide/widgets/title_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
 
@@ -102,25 +103,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                   AssetsUtils.logo,
                   // width: (MediaQuery.sizeOf(context).width - 60) * 0.5,
                 ), 
-              AnimatedTextKit(
-                animatedTexts: [
-                  ColorizeAnimatedText(
-                    'Mummy Guide',
-                    textAlign: TextAlign.center,
-                    textStyle: GoogleFonts.agbalumo(
-                      fontSize: 37,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    colors: [
-                      const Color(0xFFED2E7C),
-                      const Color(0xFFFF8EA2),
-                      const Color(0xFFED2E7C),
-                    ],
-                  ),
-                ],
-                isRepeatingAnimation: true,
-                repeatForever: true,
-              ),
+              TitleWidget(text: "MummyGuide"),
               const SizedBox(height: 150,),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 50),

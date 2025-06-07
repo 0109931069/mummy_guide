@@ -1,5 +1,6 @@
 // import 'dart:io';
 
+import 'dart:io';
 
 import 'package:mummy_guide/utils/globals.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -12,6 +13,7 @@ import 'package:mummy_guide/main.dart';
 import 'package:mummy_guide/providers/app_settings_provider.dart';
 import 'package:mummy_guide/providers/profile_tab_provider.dart';
 import 'package:mummy_guide/utils/assets_utils.dart';
+import 'package:mummy_guide/widgets/inkwell_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:path/path.dart' as path;
@@ -62,7 +64,6 @@ class ProfileTab extends StatelessWidget {
                             ),
                           )
                         : CachedNetworkImage(
-                          
                             imageUrl: profileTabProvider.photoUrl,
                             imageBuilder: (context, imageProvider) => Container(
                               height: 100,
@@ -85,139 +86,52 @@ class ProfileTab extends StatelessWidget {
                   ],
                 ),
                 onTap: () async {
-                  print(profileTabProvider.photoUrl);
-                  await showDialog<String>(
-                    context: context,
-                    builder: (context) =>  AlertDialog(
-                      title: const Text('Change Profile Picture?'),
-                      content: const Text(
-                        'Choose the source that you want to get the new picture from',
-                      ),
-            
-                      actions: [
-                        FilledButton(
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStateProperty.all(
-                              Globals.btncolor,
-                            ),
-                          ),
-                          onPressed: () async {
-                            ImagePicker imagePicker = ImagePicker();
+                  ImagePicker imagePicker = ImagePicker();
 
-                            var file = await imagePicker.pickImage(
-                              source: ImageSource.camera,
-                              imageQuality: 50,
-                            );
-
-                            if (file != null) {
-                              // profileTabProvider.toggleLoading();
-
-                              try {
-                                String originalFilename =
-                                    path.basename(file.path);
-                                // String extension = path.extension(file.path);
-                                String fileName =
-                                    "${DateTime.now().toIso8601String().replaceAll('.', '').replaceAll(' ', '')}_$originalFilename";
-
-                                // print(fileName);
-
-                                // final String fullPath = await Supabase
-                                //     .instance.client.storage
-                                //     .from('users')
-                                //     .upload(
-                                //       fileName,
-                                //       File(
-                                //         file.path,
-                                //       ),
-                                //     );
-
-                                final String url = Supabase
-                                    .instance.client.storage
-                                    .from("users")
-                                    .getPublicUrl(
-                                      fileName,
-                                    );
-
-                                await profileTabProvider
-                                    .updateUserProfilePicture(
-                                  url,
-                                );
-
-                                Navigator.of(context).pop();
-                              } catch (e) {
-                                print(e.toString());
-                              }
-
-                              // profileTabProvider.toggleLoading();
-                            }
-                          },
-                          child: const Text('Camera'),
-                        ),
-                        
-                        FilledButton(
-                          
-                          onPressed: () async {
-                            ImagePicker imagePicker = ImagePicker();
-
-                            var file = await imagePicker.pickImage(
-                              source: ImageSource.gallery,
-                              imageQuality: 50,
-                            );
-
-                            if (file != null) {
-                              // profileTabProvider.toggleLoading();
-
-                              try {
-                                String originalFilename =
-                                    path.basename(file.path);
-                                // String extension = path.extension(file.path);
-                                String fileName =
-                                    "${DateTime.now().toIso8601String().replaceAll('.', '').replaceAll(' ', '')}_$originalFilename";
-
-                                // print(fileName);
-
-                                // final String fullPath = await Supabase
-                                //     .instance.client.storage
-                                //     .from('users')
-                                //     .upload(
-                                //       fileName,
-                                //       File(
-                                //         file.path,
-                                //       ),
-                                //     );
-
-                                final String url = Supabase
-                                    .instance.client.storage
-                                    .from("users")
-                                    .getPublicUrl(
-                                      fileName,
-                                    );
-
-                                await profileTabProvider
-                                    .updateUserProfilePicture(
-                                  url,
-                                );
-
-                                Navigator.of(context).pop();
-                              } catch (e) {
-                                print(e.toString());
-                              }
-
-                              // profileTabProvider.toggleLoading();
-                            }
-                          },
-                          style: ButtonStyle(
-                            backgroundColor: WidgetStateProperty.all(
-                              Globals.btncolor,
-                            ),
-                          ),
-                          
-                          child: const Text('Gallery')
-                        ),
-                      ],
-                    ),
+                  var file = await imagePicker.pickImage(
+                    source: ImageSource.gallery,
+                    imageQuality: 50,
                   );
+
+                  if (file != null) {
+                    // profileTabProvider.toggleLoading();
+
+                    try {
+                      String originalFilename = path.basename(file.path);
+                      // String extension = path.extension(file.path);
+                      String fileName =
+                          "${DateTime.now().toIso8601String().replaceAll('.', '').replaceAll(' ', '')}_$originalFilename";
+
+                      // print(fileName);
+
+                      final String fullPath = await Supabase
+                          .instance.client.storage
+                          .from('users')
+                          .upload(
+                            fileName,
+                            File(
+                              file.path,
+                            ),
+                          );
+
+                      final String url = Supabase.instance.client.storage
+                          .from("users")
+                          .getPublicUrl(
+                            fullPath,
+                          );
+                      await profileTabProvider.updateUserProfilePicture(
+                        url,
+                      );
+
+                      Navigator.of(context).pop();
+                    } catch (e) {
+                      print(e.toString());
+                    }
+
+                    // profileTabProvider.toggleLoading();
+                  }
                 },
+                // child: const Text('Camera'),
               ),
               const SizedBox(
                 height: 20,
@@ -249,8 +163,7 @@ class ProfileTab extends StatelessWidget {
                   SizedBox(
                     width: MediaQuery.sizeOf(context).width * 0.8,
                     child: Text(
-                      "${AppLocale.your_email_label.getString(context)} : ${profileTabProvider.email}"
-                      ,
+                      "${AppLocale.your_email_label.getString(context)} : ${profileTabProvider.email}",
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 16,
@@ -270,8 +183,7 @@ class ProfileTab extends StatelessWidget {
                   SizedBox(
                     width: MediaQuery.sizeOf(context).width * 0.8,
                     child: Text(
-                      "${AppLocale.your_phone_label.getString(context)} : ${profileTabProvider.phone}"
-                      ,
+                      "${AppLocale.your_phone_label.getString(context)} : ${profileTabProvider.phone}",
                       textAlign: TextAlign.center,
                       style: const TextStyle(
                         fontSize: 14,
@@ -290,86 +202,38 @@ class ProfileTab extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              InkWell(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal:32, vertical: 15 ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      15,
-                    ),
-                    color: Globals.btncolor.withValues(alpha: 
-                      0.5,
-                    ),
+              InkwellWidget(
+                textWidget: Text(
+                  AppLocale.account_settings_label.getString(
+                    context,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: (MediaQuery.sizeOf(context).width - 40) * 0.6,
-                        child: Text(
-                          AppLocale.account_settings_label.getString(
-                            context,
-                          ),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const Icon(
-                        Icons.arrow_forward_ios_outlined,
-                      ),
-                    ],
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                onTap: () {},
+                ontap: () {},
               ),
               const SizedBox(
                 height: 5,
               ),
-              InkWell(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal:32, vertical: 15 ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      15,
-                    ),
-                    color: Globals.btncolor.withValues(alpha: 
-                      0.5,
-                    ),
+              InkwellWidget(
+                textWidget: Text(
+                  AppLocale.app_settings_label.getString(
+                    context,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: (MediaQuery.sizeOf(context).width - 40) * 0.6,
-                        child: Text(
-                          AppLocale.app_settings_label.getString(
-                            context,
-                          ),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const Icon(
-                        Icons.arrow_forward_ios_outlined,
-                      ),
-                    ],
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                onTap: () async {
+                ontap: () async {
                   final appSettingsProvider = Provider.of<AppSettingsProvider>(
                     context,
                     listen: false,
                   );
 
                   await appSettingsProvider.getCurrentLanguage();
-
-                  // appSettingsProvider.setIsDark(
-                  //   Globals.theme == "Dark",
-                  // );
 
                   Navigator.of(
                     context,
@@ -380,76 +244,32 @@ class ProfileTab extends StatelessWidget {
               const SizedBox(
                 height: 5,
               ),
-              InkWell(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal:32, vertical: 15 ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      15,
-                    ),
-                    color: Globals.btncolor.withValues(alpha: 
-                      0.5,
-                    ),
+              InkwellWidget(
+                textWidget: Text(
+                  AppLocale.preferences_label.getString(
+                    context,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: (MediaQuery.sizeOf(context).width - 40) * 0.6,
-                        child: Text(
-                          AppLocale.preferences_label.getString(
-                            context,
-                          ),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const Icon(
-                        Icons.arrow_forward_ios_outlined,
-                      ),
-                    ],
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                onTap: () {},
+                ontap: () {},
               ),
               const SizedBox(
                 height: 5,
               ),
-              InkWell(
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal:32, vertical: 15 ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      15,
-                    ),
-                    color: Globals.btncolor.withValues(alpha: 
-                      0.5,
-                    ),
+              InkwellWidget(
+                textWidget: Text(
+                  AppLocale.privacy_label.getString(
+                    context,
                   ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: (MediaQuery.sizeOf(context).width - 40) * 0.6,
-                        child: Text(
-                          AppLocale.privacy_label.getString(
-                            context,
-                          ),
-                          style: const TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      const Icon(
-                        Icons.arrow_forward_ios_outlined,
-                      ),
-                    ],
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                onTap: () {},
+                ontap: () {},
               ),
               const SizedBox(
                 height: 10,
@@ -461,45 +281,20 @@ class ProfileTab extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              InkWell(
-                child: Container(
-                  padding: const EdgeInsets.all(10),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(
-                      15,
-                    ),
-                    color: const Color.fromARGB(255, 66, 65, 65).withValues(alpha: 
-                      0.9,
-                    ),
+              InkwellWidget(
+                bg: const Color.fromARGB(255, 66, 65, 65).withValues(
+                  alpha: 0.9,
+                ),
+                textWidget: Text(
+                  AppLocale.logout_label.getString(
+                    context,
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal:30, vertical: 6),
-                    child: Row(
-                      
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        SizedBox(
-                          
-                          width: (MediaQuery.sizeOf(context).width - 40) * 0.6,
-                          child: Text(
-                            AppLocale.logout_label.getString(
-                              context,
-                            ),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              
-                            ),
-                          ),
-                        ),
-                        const Icon(
-                          Icons.arrow_forward_ios_outlined,
-                        ),
-                      ],
-                    ),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                onTap: () async {
+                ontap: () async {
                   try {
                     await AuthController.logOut();
                   } catch (e) {

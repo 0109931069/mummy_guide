@@ -15,7 +15,6 @@ import 'package:mummy_guide/providers/profile_tab_provider.dart';
 import 'package:mummy_guide/providers/timeline_provider.dart';
 import 'package:mummy_guide/screens/authentication/create_account_screen.dart';
 import 'package:mummy_guide/screens/authentication/login_screen.dart';
-import 'package:mummy_guide/screens/forget_passwrod.dart';
 import 'package:mummy_guide/screens/general/home_screen.dart';
 import 'package:mummy_guide/screens/general/onboarding.dart';
 import 'package:mummy_guide/screens/general/welcome_screen.dart';

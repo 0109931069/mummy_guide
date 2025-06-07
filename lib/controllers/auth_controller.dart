@@ -6,48 +6,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 // import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthController {
-  // static Future<Map<String, dynamic>> signwithgoogle()async{
-  //   try {
-
-  //     GoogleSignIn googleSignIn = GoogleSignIn(
-  //       clientId: dotenv.env["GOOGLE_CLIENT_ID"].toString(),
-  //     );
-  //     var account = await googleSignIn.signIn();
-  //     if (account == null){
-  //       return{
-  //         "result": false,
-  //         "message": "No account Selected",
-  //       };
-  //     }
-  //     final googleUser = await googleSignIn.signIn();
-  //     final googleAuth = await googleUser!.authentication;
-  //     final accessToken = googleAuth.accessToken;
-  //     final idToken = googleAuth.idToken;
-  //     if (accessToken == null) {
-  //       throw 'No Access Token found.';
-  //     }
-  //     if (idToken == null) {
-  //       throw 'No ID Token found.';
-  //     }
-  //     final response = await Supabase.instance.client.auth.signInWithIdToken(
-  //       provider: OAuthProvider.google,
-  //       idToken: idToken,
-  //       accessToken: accessToken,
-  //     );
-
-  //     return{
-  //       "result":true,
-  //       "message": "signed in sucessfully",
-  //     };
-  //   }on AuthException catch (e) {
-  //     print(e.toString());
-  //     return{
-  //       "result": false,
-  //       "message": e.toString(),
-  //     };
-  //   }
-
-  // }
+  
 
   static Future<void> setAuth(Map<String, dynamic> data) async {
     try {
@@ -116,11 +75,11 @@ class AuthController {
           ...res.user!.toJson(),
         },
       };
-    } on AuthException catch (e) {
-      debugPrint(e.message.toString());
+    } catch (e) {
+      debugPrint(e.toString());
       return {
         "result": false,
-        "message": e.message,
+        "message": e.toString(),
       };
     }
   }
@@ -276,7 +235,7 @@ class AuthController {
   }
   static Future<Map<String, dynamic>>forgetPassword(String Email)async{
     try{
-      await Supabase.instance.client.auth.resetPasswordForEmail(Email);
+      await Supabase.instance.client.auth.resetPasswordForEmail(Email.toLowerCase().trim());
       return{
         "result": true,
         "message": " linke has been sent sucessfully t your email",
