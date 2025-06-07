@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:mummy_guide/controllers/auth_controller.dart';
 import 'package:mummy_guide/locale/app_locale.dart';
 import 'package:mummy_guide/main.dart';
@@ -13,7 +12,6 @@ import 'package:mummy_guide/utils/globals.dart';
 import 'package:mummy_guide/utils/size_conf.dart';
 import 'package:mummy_guide/widgets/title_widget.dart';
 import 'package:provider/provider.dart';
-import 'package:animated_text_kit/animated_text_kit.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
