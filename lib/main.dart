@@ -22,9 +22,12 @@ import 'package:mummy_guide/screens/location/location_viewer.dart';
 import 'package:mummy_guide/screens/posts/post_screen.dart';
 import 'package:mummy_guide/screens/tabs/home/new_post_screen.dart';
 import 'package:mummy_guide/screens/tabs/profile/app_settings_screen.dart';
+import 'package:mummy_guide/services/notification_service.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
+
+import 'screens/tabs/profile/profile_tab.dart';
 
 final FlutterLocalization localization = FlutterLocalization.instance;
 PageController? pageController;
@@ -39,6 +42,7 @@ const FlutterSecureStorage secureStorage = FlutterSecureStorage(
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeNotificationService();
   
 
   try {
@@ -160,7 +164,7 @@ class MyAppState extends State<MyApp> {
         const MapLocale('en', AppLocale.EN),
         const MapLocale('ar', AppLocale.AR),
       ],
-      initLanguageCode: 'en',
+      initLanguageCode: 'ar',
     );
     localization.onTranslatedLanguage = _onTranslatedLanguage;
     super.initState();
@@ -186,14 +190,15 @@ class MyAppState extends State<MyApp> {
       routes: {
         "/": (context) => const WelcomeScreen(),
         "/onboarding": (context) => const Onboarding(),
-        "/forget_password": (context) => ForgetPasswrod(),
-        "/login": (context) => LoginScreen(),
-        "/create_account": (context) => CreateAccountScreen(),
+        "/forget_password": (context) => const ForgetPasswrod(),
+        "/login": (context) => const LoginScreen(),
+        "/create_account": (context) => const CreateAccountScreen(),
         "/home": (context) => HomeScreen(),
         "/app_settings": (context) => const AppSettingsScreen(),
-        "/new_post": (context) => NewPostScreen(),
+        "/new_post": (context) => const NewPostScreen(),
         "/location_viewer": (context) => const LocationViewerScreen(),
         "/view_post": (context) => const PostScreen(),
+        "/profile": (context) => const ProfileTab(),
       },
     );
 

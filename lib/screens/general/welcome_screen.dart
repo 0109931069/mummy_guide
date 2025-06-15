@@ -5,6 +5,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 import 'package:mummy_guide/controllers/auth_controller.dart';
 import 'package:mummy_guide/locale/app_locale.dart';
 import 'package:mummy_guide/main.dart';
+import 'package:mummy_guide/providers/profile_tab_provider.dart';
 import 'package:mummy_guide/providers/timeline_provider.dart';
 // import 'package:mummy_guide/screens/authentication/login_screen.dart';
 import 'package:mummy_guide/utils/assets_utils.dart';
@@ -52,6 +53,11 @@ class WelcomeScreenState extends State<WelcomeScreen> {
           context,
           listen: false,
         );
+        final profileTabProvider = Provider.of<ProfileTabProvider>(
+          context,
+          listen: false,
+        );
+        profileTabProvider.getData();
 
         timelineProvider.getData();
 
@@ -77,7 +83,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
   @override
   void dispose() {
     // TODO: implement dispose
-    // timer!.cancel();
+    // timer?.cancel();
     super.dispose();
   }
 
@@ -101,7 +107,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                   AssetsUtils.logo,
                   // width: (MediaQuery.sizeOf(context).width - 60) * 0.5,
                 ), 
-              TitleWidget(text: "MummyGuide"),
+          TitleWidget(text: "MummyGuide"),
               const SizedBox(height: 150,),
               Container(
                 margin: const EdgeInsets.symmetric(horizontal: 50),

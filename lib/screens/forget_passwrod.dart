@@ -14,7 +14,7 @@ import 'package:provider/provider.dart';
 
 class ForgetPasswrod extends StatefulWidget {
 
-  ForgetPasswrod({super.key});
+  const ForgetPasswrod({super.key});
 
   @override
   State<ForgetPasswrod> createState() => _ForgetPasswrodState();

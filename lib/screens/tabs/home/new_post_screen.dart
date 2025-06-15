@@ -19,10 +19,17 @@ import 'package:provider/provider.dart';
 // import 'package:fluent_ui/fluent_ui.dart' as fluent;
 import 'package:video_player/video_player.dart';
 
-class NewPostScreen extends StatelessWidget {
+class NewPostScreen extends StatefulWidget {
+
+  const NewPostScreen({super.key});
+
+  @override
+  State<NewPostScreen> createState() => _NewPostScreenState();
+}
+
+class _NewPostScreenState extends State<NewPostScreen> {
   final CarouselSliderController _controller = CarouselSliderController();
 
-  NewPostScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -64,11 +71,11 @@ class NewPostScreen extends StatelessWidget {
           
           actions: [
             ElevatedButton(
-              onPressed: () {
-                newPostProvider.onAdd(
+              onPressed: ()async {
+                await newPostProvider.onAdd(
                   context,
                 );
-                newPostProvider.clearMedia();
+                newPostProvider.media.clear();
               },
               style: ButtonStyle(
                 backgroundColor: WidgetStateProperty.all(Globals.btncolor),
@@ -306,7 +313,10 @@ class NewPostScreen extends StatelessWidget {
                                               )
                                             : Container(
                                                 child: FlickVideoPlayer(
+
                                                   flickManager: FlickManager(
+                                                    autoPlay: false,
+
                                                     videoPlayerController:
                                                         VideoPlayerController
                                                             .networkUrl(
@@ -367,7 +377,7 @@ class NewPostScreen extends StatelessWidget {
                         vertical: 5,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.grey.withOpacity(
+                        color: Colors.grey.withValues(alpha: 
                           0.1,
                         ),
                         borderRadius: BorderRadius.circular(
@@ -536,12 +546,13 @@ class NewPostScreen extends StatelessWidget {
                                         style: const TextStyle(color: Globals.btncolor),
                                       ),
                                       onPressed: () async {
-                                        ImagePicker imagePicker = ImagePicker();
+                                       ImagePicker imagePicker = ImagePicker();
               
                                         var file = await imagePicker.pickVideo(
+
                                           source: ImageSource.camera,
                                         );
-              
+               
                                         if (file == null) {
                                           Navigator.of(context).pop();
                                           return;
@@ -584,6 +595,7 @@ class NewPostScreen extends StatelessWidget {
                                       ),
                                       onPressed: () async {
                                         ImagePicker imagePicker = ImagePicker();
+
               
                                         var file = await imagePicker.pickVideo(
                                           source: ImageSource.gallery,

@@ -44,12 +44,27 @@ class ProfileTab extends StatelessWidget {
               const SizedBox(
                 height: 20,
               ),
-              InkWell(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    profileTabProvider.photoUrl == ""
-                        ? Container(
+              Stack(
+                alignment: Alignment.center,
+                children: [
+                  profileTabProvider.photoUrl == ""
+                      ? Container(
+                          height: 100,
+                          width: 100,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(
+                              60,
+                            ),
+                            image: DecorationImage(
+                              image: AssetImage(
+                                AssetsUtils.profileAvatar,
+                              ),
+                            ),
+                          ),
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: profileTabProvider.photoUrl,
+                          imageBuilder: (context, imageProvider) => Container(
                             height: 100,
                             width: 100,
                             decoration: BoxDecoration(
@@ -57,81 +72,83 @@ class ProfileTab extends StatelessWidget {
                                 60,
                               ),
                               image: DecorationImage(
-                                image: AssetImage(
-                                  AssetsUtils.profileAvatar,
-                                ),
+                                image: imageProvider,
+                                fit: BoxFit.cover,
                               ),
                             ),
-                          )
-                        : CachedNetworkImage(
-                            imageUrl: profileTabProvider.photoUrl,
-                            imageBuilder: (context, imageProvider) => Container(
-                              height: 100,
-                              width: 100,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                  60,
-                                ),
-                                image: DecorationImage(
-                                  image: imageProvider,
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            ),
-                            placeholder: (context, url) =>
-                                const CircularProgressIndicator(),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
                           ),
-                  ],
-                ),
-                onTap: () async {
-                  ImagePicker imagePicker = ImagePicker();
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                  if (profileTabProvider.isLoading)
+                    const CircularProgressIndicator(),
+                  Positioned.fill(
+                    child: Material(
+                      color: Colors.transparent,
+                      child: InkWell(
+                        borderRadius: BorderRadius.circular(60),
+                        onTap: () async {
+                          ImagePicker imagePicker = ImagePicker();
 
-                  var file = await imagePicker.pickImage(
-                    source: ImageSource.gallery,
-                    imageQuality: 50,
-                  );
+                          try {
+                            var file = await imagePicker.pickImage(
+                              source: ImageSource.gallery,
+                              imageQuality: 50,
+                            );
 
-                  if (file != null) {
-                    // profileTabProvider.toggleLoading();
+                            if (file != null) {
+                              try {
+                                String originalFilename = path.basename(file.path);
+                                String fileName =
+                                    "${DateTime.now().toIso8601String().replaceAll('.', '').replaceAll(' ', '')}_$originalFilename";
 
-                    try {
-                      String originalFilename = path.basename(file.path);
-                      // String extension = path.extension(file.path);
-                      String fileName =
-                          "${DateTime.now().toIso8601String().replaceAll('.', '').replaceAll(' ', '')}_$originalFilename";
+                                final fullPath = await Supabase.instance.client.storage
+                                    .from('users')
+                                    .upload(
+                                      fileName,
+                                      File(
+                                        file.path,
+                                      ),
+                                    );
+                                print("Full path: $fullPath");
+                                final url = Supabase.instance.client.storage
+                                    .from("users")
+                                    .getPublicUrl(
+                                      fileName,
+                                    );
+                                print("url $url");
 
-                      // print(fileName);
+                                await profileTabProvider.updateUserProfilePicture(
+                                  url,
+                                );
 
-                      final String fullPath = await Supabase
-                          .instance.client.storage
-                          .from('users')
-                          .upload(
-                            fileName,
-                            File(
-                              file.path,
-                            ),
-                          );
-
-                      final String url = Supabase.instance.client.storage
-                          .from("users")
-                          .getPublicUrl(
-                            fullPath,
-                          );
-                      await profileTabProvider.updateUserProfilePicture(
-                        url,
-                      );
-
-                      Navigator.of(context).pop();
-                    } catch (e) {
-                      print(e.toString());
-                    }
-
-                    // profileTabProvider.toggleLoading();
-                  }
-                },
-                // child: const Text('Camera'),
+                                print(url);
+                                // Removed Navigator.of(context).pop();
+                              } catch (e) {
+                                print(e.toString());
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Failed to upload image.'),
+                                  ),
+                                );
+                              }
+                            }
+                          } catch (e) {
+                            print(e.toString());
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Image selection cancelled or failed.'),
+                              ),
+                            );
+                          }
+                        },
+                       
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 20,
@@ -203,6 +220,9 @@ class ProfileTab extends StatelessWidget {
                 height: 10,
               ),
               InkwellWidget(
+                bg: Globals.btncolor.withValues(
+                  alpha: 0.5,
+                ),
                 textWidget: Text(
                   AppLocale.account_settings_label.getString(
                     context,
@@ -218,6 +238,9 @@ class ProfileTab extends StatelessWidget {
                 height: 5,
               ),
               InkwellWidget(
+                bg: Globals.btncolor.withValues(
+                  alpha: 0.5,
+                ),
                 textWidget: Text(
                   AppLocale.app_settings_label.getString(
                     context,
@@ -245,6 +268,9 @@ class ProfileTab extends StatelessWidget {
                 height: 5,
               ),
               InkwellWidget(
+                bg: Globals.btncolor.withValues(
+                  alpha: 0.5,
+                ),
                 textWidget: Text(
                   AppLocale.preferences_label.getString(
                     context,
@@ -260,6 +286,9 @@ class ProfileTab extends StatelessWidget {
                 height: 5,
               ),
               InkwellWidget(
+                bg: Globals.btncolor.withValues(
+                  alpha: 0.5,
+                ),
                 textWidget: Text(
                   AppLocale.privacy_label.getString(
                     context,

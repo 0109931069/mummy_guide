@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -29,13 +30,15 @@ class CommunityTab extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Globals.white,
         appBar: AppBar(
-          backgroundColor: Globals.white,
+          backgroundColor: Globals.btncolor.withValues(alpha: .3),
+          elevation: 2,
           centerTitle: false,
           title:  Text(
             AppLocale.community_label.getString(context),
             style: GoogleFonts.agbalumo(
-              fontSize: 24,
+              fontSize: 26,
               fontWeight: FontWeight.bold,
+              color: CupertinoColors.systemGrey,
             ),
           )
               .animate(

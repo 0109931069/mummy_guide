@@ -5,7 +5,7 @@ import 'package:mummy_guide/main.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 
 class AppSettingsProvider with ChangeNotifier {
-  String _currentLanguage = "English";
+  String _currentLanguage = "Arabic";
   String get currentLanguage => _currentLanguage;
 
   // bool _isDark = false;

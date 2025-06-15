@@ -14,7 +14,7 @@ import 'package:flutter_localization/flutter_localization.dart';
 
 class CreateAccountScreen extends StatefulWidget {
 
-  CreateAccountScreen({super.key});
+  const CreateAccountScreen({super.key});
 
   @override
   State<CreateAccountScreen> createState() => _CreateAccountScreenState();
@@ -128,21 +128,21 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                           onPressed: () async {
                             if (emailController.text == "") {
                               Fluttertoast.showToast(
-                                msg: "Please enter your email!!",
+                                msg: AppLocale.please_enter_your_email_label.getString(context),
                               );
                               return;
                             }
 
                             if (passController.text == "") {
                               Fluttertoast.showToast(
-                                msg: "Please enter your password!!",
+                                msg: AppLocale.please_enter_your_password_label.getString(context),
                               );
                               return;
                             }
 
                             if (confirmPassController.text == "") {
                               Fluttertoast.showToast(
-                                msg: "Please confirm your password!!",
+                                msg: AppLocale.please_confirm_your_password_label ?? "Please confirm your password!!",
                               );
                               return;
                             }
@@ -150,14 +150,14 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                             if (confirmPassController.text !=
                                 passController.text) {
                               Fluttertoast.showToast(
-                                msg: "Passwords don't match!!",
+                                msg: AppLocale.passwords_dont_match_label ?? "Passwords don't match!!",
                               );
                               return;
                             }
 
                             if (fullNameController.text == "") {
                               Fluttertoast.showToast(
-                                msg: "Please enter your full name!!",
+                                msg: AppLocale.please_enter_your_fullname_label.getString(context),
                               );
                               return;
                             }
@@ -175,13 +175,13 @@ class _CreateAccountScreenState extends State<CreateAccountScreen> {
                                 },
                               );
                               print("create account status $res");
-                              if (res["result"] == true) {
-                                Navigator.of(context).pop();
-                              } else {
-                                Fluttertoast.showToast(
-                                  msg: res["message"].toString(),
-                                );
-                              }
+                              Fluttertoast.showToast(
+                                msg:
+                                    "We have sent a verification email to your email address. Please check your inbox and verify your account before logging in.",
+                              );
+          
+                              Navigator.of(context).pop();
+                              
                             } catch (e) {
                               print(e.toString());
                             }

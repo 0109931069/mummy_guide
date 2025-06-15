@@ -3,6 +3,12 @@
 mixin AppLocale {
   static const String enter_your_email_label = "Enter your email";
   static const String enter_your_password_label = "Enter your password";
+  static const String please_enter_your_email_label = "Please enter your email!!";
+  static const String please_enter_your_password_label = "Please enter your password!!";
+  static const String please_confirm_your_password_label = "Please confirm your password!!";
+  static const String passwords_dont_match_label = "Passwords don't match!!";
+  static const String please_enter_your_fullname_label = "Please enter your full name!!";
+  static const String verification_email_sent_label = "We have sent a verification email to your email address. Please check your inbox and verify your account before logging in.";
   static const String email_label = "Email";
   static const String password_label = "Password";
   static const String login_label = "Login";
@@ -69,13 +75,28 @@ mixin AppLocale {
   static const String contact_label = "Contact";
   static const String loading_label = "Loading ... ";
   static const String lets_go_label = "Let's Go!";
+  static const String mummy_guide_label = "MummyGuide";
+  static const String welcome_to_mummy_guide_label = "Welcome to MammyGuide ";
+  static const String home_description_label = "Here you will find everything you want: tips, advice, videos, books, chatbot, and even friends you can talk with.";
   static const String your_phone_label = "Your Phone";
   static const String your_email_label = "Your Email";
   static const String your_username_label = "Your Name";
   static const String forget_password_label = "Foregt Passsword?";
   static const String reset_password_label = "Reset Passsword?";
+  static const String skip_label = "Skip";
+  static const String next_label = "Next";
+  static const String get_start_label = "Get Started";
+  static const String consultants_label = "Consultants";
+  static const String chatbot_label = "ChatBot";
+  static const String books_label = "Books";
+
 
   static const Map<String, dynamic> EN = {
+    consultants_label: "Consultants",
+    chatbot_label:"ChatBot",
+    books_label:"Books",
+    skip_label: "Skip",
+    next_label: "Next",
     forget_password_label: "Forget Password?",
     reset_password_label: "Reset Password",
     community_label : "Community",
@@ -127,8 +148,13 @@ mixin AppLocale {
     new_post_label: "New Post",
     publish_label: "Publish",
     whats_on_your_mind_label: "What's on your mind?",
+    mummy_guide_label: "MummyGuide",
+    welcome_to_mummy_guide_label: "Welcome to MammyGuide ",
+    home_description_label: "Here you will find everything you want: tips, advice, videos, books, chatbot, and even friends you can talk with.",
     enter_your_email_label: "Enter your email",
     enter_your_password_label: "Enter your password",
+    please_enter_your_email_label: "Please enter your email!!",
+    please_enter_your_password_label: "Please enter your password!!",
     email_label: "Email",
     password_label: "Password",
     login_label: "Login",
@@ -149,9 +175,16 @@ mixin AppLocale {
     logout_label: "Log Out",
     language_label: "Language",
     dark_mode_label: "Dark Mode",
+    get_start_label : "Get Started",
   };
 
   static const Map<String, dynamic> AR = {
+    consultants_label: "الخبراء",
+    chatbot_label: "الدردشه",
+    books_label: "الكتب",
+    skip_label: "تخطي",
+    next_label: "التالي",
+    get_start_label:"لنبدء",
     forget_password_label: "نسيت كلمه المرور؟",
     reset_password_label: "اعاده تعين كلمه المرور",
     community_label : "المجتع",
@@ -203,8 +236,13 @@ mixin AppLocale {
     new_post_label: "منشور جديد",
     publish_label: "النشر",
     whats_on_your_mind_label: "ما الذي تفكر به؟",
+    mummy_guide_label: "MummyGuide",
+    welcome_to_mummy_guide_label: "مرحبا بكم في MummyGuide ",
+    home_description_label: "هنا ستجد كل ما تريد: نصائح، إرشادات، فيديوهات، كتب، دردشة، وحتى أصدقاء يمكنك التحدث معهم.",
     enter_your_email_label: "ادخل بريدك الالكتروني",
     enter_your_password_label: "ادخل كلمة المرور",
+    please_enter_your_email_label: "الرجاء إدخال بريدك الإلكتروني!!",
+    please_enter_your_password_label: "الرجاء إدخال كلمة المرور!!",
     email_label: "البريد الالكتروني",
     password_label: "كلمة المرور",
     login_label: "تسجيل الدخول",
@@ -227,5 +265,6 @@ mixin AppLocale {
     dark_mode_label: "الوضع الليلي",
   };
 
-  var text;
+
+
 }

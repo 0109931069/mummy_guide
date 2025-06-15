@@ -1,13 +1,11 @@
 
 import 'package:flutter/material.dart';
-// import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:mummy_guide/main.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
 
+/// Controller class for authentication-related operations.
 class AuthController {
-  
-
+  /// Stores authentication data securely.
   static Future<void> setAuth(Map<String, dynamic> data) async {
     try {
       await secureStorage.write(
@@ -31,6 +29,7 @@ class AuthController {
     }
   }
 
+  /// Deletes stored authentication data.
   static Future<void> purgeAuth() async {
     try {
       await secureStorage.delete(key: "is_logged_in");
@@ -42,10 +41,10 @@ class AuthController {
     }
   }
 
+  /// Creates a new user account with the provided data.
   static Future<Map<String, dynamic>> createAccount(
       Map<String, dynamic> data) async {
     try {
-     
       var res = await Supabase.instance.client.auth.signUp(
         password: data["password"].toString(),
         email: data["email"].toString(),
@@ -57,7 +56,7 @@ class AuthController {
       if (res.user == null) {
         return {
           "result": false,
-          "message": "Error while create account!!",
+          "message": "Error while creating account.",
         };
       }
 
@@ -70,7 +69,7 @@ class AuthController {
 
       return {
         "result": true,
-        "message": "Created account successfully ... ",
+        "message": "Account created successfully.",
         "data": {
           ...res.user!.toJson(),
         },
@@ -84,6 +83,7 @@ class AuthController {
     }
   }
 
+  /// Logs in a user with email and password.
   static Future<Map<String, dynamic>> login(
       String email, String password) async {
     try {
@@ -95,7 +95,7 @@ class AuthController {
       if (res.user == null) {
         return {
           "result": false,
-          "message": "Error while login!!",
+          "message": "Error while logging in.",
         };
       }
 
@@ -107,7 +107,7 @@ class AuthController {
 
       return {
         "result": true,
-        "message": "Logged in successfully ... ",
+        "message": "Logged in successfully.",
         "data": {
           ...res.user!.toJson(),
         },
@@ -121,6 +121,7 @@ class AuthController {
     }
   }
 
+  /// Checks if the user is logged in and returns user data.
   static Future<Map<String, dynamic>> checkLogin() async {
     try {
       bool isLoggedIn = (await secureStorage.read(key: "is_logged_in")) == null
@@ -129,11 +130,9 @@ class AuthController {
       if (isLoggedIn == false) {
         return {
           "result": false,
-          "message": "Please login again!!",
+          "message": "Please login again.",
         };
       }
-      
-      // print(isLoggedIn);
 
       var email = await secureStorage.read(key: "login_email");
       var password = await secureStorage.read(key: "login_password");
@@ -146,13 +145,13 @@ class AuthController {
       if (res.user == null) {
         return {
           "result": false,
-          "message": "Error while login!!",
+          "message": "Error while logging in.",
         };
       }
 
       return {
         "result": true,
-        "message": "Logged in successfully ... ",
+        "message": "Logged in successfully.",
         "data": {
           ...res.user!.toJson(),
         },
@@ -166,6 +165,7 @@ class AuthController {
     }
   }
 
+  /// Logs out the current user and clears stored auth data.
   static Future<void> logOut() async {
     try {
       try {
@@ -184,6 +184,7 @@ class AuthController {
     }
   }
 
+  /// Retrieves current user data.
   static Future<Map<String, dynamic>> getCurrentUserData() async {
     try {
       var uid = await secureStorage.read(
@@ -193,17 +194,15 @@ class AuthController {
       if (uid == null) {
         return {
           "result": false,
-          "message": "Please login again!!",
+          "message": "Please login again.",
         };
       }
 
       var res = Supabase.instance.client.auth.currentUser!.toJson();
 
-      // print(res);
-
       return {
         "result": true,
-        "message": "Retrieved successfully .. ",
+        "message": "Retrieved successfully.",
         "data": res,
       };
     } catch (e) {
@@ -214,6 +213,7 @@ class AuthController {
     }
   }
 
+  /// Updates current user data with provided fields.
   static Future<Map<String, dynamic>> updateCurrentUserData(
       Map<String, dynamic> data) async {
     try {
@@ -223,7 +223,7 @@ class AuthController {
 
       return {
         "result": true,
-        "message": "Updated successfully ... ",
+        "message": "Updated successfully.",
       };
     } catch (e) {
       debugPrint(e.toString());
@@ -233,19 +233,20 @@ class AuthController {
       };
     }
   }
-  static Future<Map<String, dynamic>>forgetPassword(String Email)async{
-    try{
-      await Supabase.instance.client.auth.resetPasswordForEmail(Email.toLowerCase().trim());
-      return{
+
+  /// Sends a password reset email to the given email address.
+  static Future<Map<String, dynamic>> forgetPassword(String email) async {
+    try {
+      await Supabase.instance.client.auth.resetPasswordForEmail(email.toLowerCase().trim());
+      return {
         "result": true,
-        "message": " link has been sent sucessfully t your email",
+        "message": "Password reset link has been sent successfully to your email.",
       };
-    }
-    catch(e){
-      print(e.toString());
-      return{
+    } catch (e) {
+      debugPrint(e.toString());
+      return {
         "result": false,
-        "meassge": e.toString(),
+        "message": e.toString(),
       };
     }
   }

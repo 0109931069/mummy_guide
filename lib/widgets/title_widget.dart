@@ -18,6 +18,7 @@ class TitleWidget extends StatelessWidget {
           text,
           textAlign: TextAlign.center,
           textStyle: GoogleFonts.agbalumo(
+            
             fontSize: 30,
             fontWeight: FontWeight.bold,
           ),

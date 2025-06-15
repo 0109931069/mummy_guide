@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:mummy_guide/utils/globals.dart';
 
+/// A customizable InkWell widget with text and an arrow icon.
 class InkwellWidget extends StatelessWidget {
-  InkwellWidget({super.key, this.textWidget, this.ontap, this.bg});
+  /// The text widget to display inside the InkWell.
   final Text? textWidget;
+
+  /// The callback function to execute on tap.
   final VoidCallback? ontap;
-  Color? bg = Globals.btncolor.withValues(
-    alpha: 0.5,
-  );
+
+  /// The background color of the container.
+  final Color? bg;
+
+  /// Creates an InkwellWidget.
+  const InkwellWidget({
+    super.key,
+    this.textWidget,
+    this.ontap,
+    this.bg,
+  });
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -15,10 +26,8 @@ class InkwellWidget extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 15),
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(
-            15,
-          ),
-          color:bg
+          borderRadius: BorderRadius.circular(15),
+          color: bg,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,

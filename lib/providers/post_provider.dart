@@ -95,7 +95,7 @@ class PostProvider with ChangeNotifier {
 
         getComments();
 
-        // TODO: send notification to post owner for the comment
+
       } else {
         Fluttertoast.showToast(
           msg: AppLocale.something_went_wrong_label.getString(
@@ -181,7 +181,7 @@ class PostProvider with ChangeNotifier {
 
         getComments();
 
-        // TODO: send notification to post owner for the comment
+     
       } else {
         Fluttertoast.showToast(
           msg: AppLocale.something_went_wrong_label.getString(

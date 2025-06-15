@@ -1,4 +1,4 @@
-package com.example.mummy_guide
+package com.example.MammyGuide
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -3,14 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localization/flutter_localization.dart';
 import 'package:mummy_guide/locale/app_locale.dart';
 import 'package:mummy_guide/main.dart';
+import 'package:mummy_guide/pages/all_books_page.dart';
+import 'package:mummy_guide/pages/all_videos.dart';
+import 'package:mummy_guide/pages/chat_bot_screen.dart';
+import 'package:mummy_guide/pages/consultants_page.dart';
 import 'package:mummy_guide/providers/home_screen_provider.dart';
 import 'package:mummy_guide/providers/profile_tab_provider.dart';
 import 'package:mummy_guide/providers/timeline_provider.dart';
 import 'package:mummy_guide/screens/tabs/community/community_tab.dart';
 import 'package:mummy_guide/screens/tabs/home/home_tab.dart';
-import 'package:mummy_guide/screens/tabs/notifications/notifications_tab.dart';
-import 'package:mummy_guide/screens/tabs/profile/profile_tab.dart';
-import 'package:mummy_guide/screens/tabs/videos/videos_tab.dart';
+// import 'package:mummy_guide/screens/tabs/profile/profile_tab.dart';
 import 'package:mummy_guide/utils/globals.dart';
 import 'package:persistent_bottom_nav_bar/persistent_bottom_nav_bar.dart';
 import 'package:provider/provider.dart';
@@ -39,11 +41,20 @@ class HomeScreen extends StatelessWidget {
             screens: const [
               HomeTab(),
               CommunityTab(),
-              VideosTab(),
-              NotificationsTab(),
-              ProfileTab(),
+              AllVideosPage(),
+              ConsultantPage(),
+              AllBooksPage(),
+              ChatBotPage(),
             ],
             onItemSelected: (value) {
+              if(value == 0) {
+                final profileTabProvider = Provider.of<ProfileTabProvider>(
+                  context,
+                  listen: false,
+                );
+        
+                profileTabProvider.getData();
+              }
               // print(value);
               if (value == 1) {
                 final timeLineProvider = Provider.of<TimelineProvider>(
@@ -54,15 +65,6 @@ class HomeScreen extends StatelessWidget {
                 timeLineProvider.getData();
               }
         
-              if (value == 4) {
-                final profileTabProvider = Provider.of<ProfileTabProvider>(
-                  context,
-                  listen: false,
-                );
-              
-                profileTabProvider.getData();
-                
-              }
             },
             items: [
               PersistentBottomNavBarItem(
@@ -96,9 +98,9 @@ class HomeScreen extends StatelessWidget {
                    
               ),
               PersistentBottomNavBarItem(
-                icon: const Icon(Icons.notifications),
+                icon: const Icon(Icons.engineering_sharp),
                 // title: ("Notifications"),
-                title: AppLocale.notifications_label.getString(
+                title: AppLocale.consultants_label.getString(
                   context,
                 ),
                 activeColorPrimary: Globals.btncolor,
@@ -106,14 +108,22 @@ class HomeScreen extends StatelessWidget {
                    
               ),
               PersistentBottomNavBarItem(
-                icon: const Icon(Icons.account_circle_sharp),
-                // title: ("Profile"),
-                title: AppLocale.profile_label.getString(
-                  context,
-                ),
-                activeColorPrimary: Globals.btncolor,
-                inactiveColorPrimary:  CupertinoColors.systemGrey
-              ),
+                  icon: const Icon(Icons.library_add_check_sharp),
+                  // title: ("Profile"),
+                  title: AppLocale.books_label.getString(
+                    context,
+                  ),
+                  activeColorPrimary: Globals.btncolor,
+                  inactiveColorPrimary: CupertinoColors.systemGrey),
+                  PersistentBottomNavBarItem(
+                    
+                  icon: const Icon(Icons.chat_bubble_outline_outlined),
+                  // title: ("Profile"),
+                  title: AppLocale.chatbot_label.getString(
+                    context,
+                  ),
+                  activeColorPrimary: Globals.btncolor,
+                  inactiveColorPrimary: CupertinoColors.systemGrey),
             ],
             handleAndroidBackButtonPress: true, // Default is true.
             resizeToAvoidBottomInset:

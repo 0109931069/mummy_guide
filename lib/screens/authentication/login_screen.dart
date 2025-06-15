@@ -1,3 +1,4 @@
+import 'package:mummy_guide/providers/profile_tab_provider.dart';
 import 'package:mummy_guide/providers/timeline_provider.dart';
 import 'package:mummy_guide/utils/globals.dart';
 // import 'package:animated_text_kit/animated_text_kit.dart';
@@ -13,10 +14,11 @@ import 'package:mummy_guide/widgets/form_widget.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:mummy_guide/widgets/title_widget.dart';
 import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
 
-  LoginScreen({super.key});
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -87,7 +89,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: () {
                             Navigator.of(context).pushNamed("/forget_password");
                           },
-                          child: const Text("Forget the password ?")),
+                          child: Text(AppLocale.forget_password_label.getString(context))),
                     ],
                   ),
                   const SizedBox(
@@ -104,14 +106,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: () async {
                             if (emailController.text == "") {
                               Fluttertoast.showToast(
-                                msg: "Please enter your email!!",
+                                msg: AppLocale.please_enter_your_email_label,
                               );
                               return;
                             }
 
                             if (passController.text == "") {
                               Fluttertoast.showToast(
-                                msg: "Please enter your password!!",
+                                msg: AppLocale.please_enter_your_password_label,
                               );
                               return;
                             }
@@ -132,6 +134,12 @@ class _LoginScreenState extends State<LoginScreen> {
                                 );
 
                                 timelineProvider.getData();
+                                final profileTabProvider =
+                                    Provider.of<ProfileTabProvider>(
+                                  context,
+                                  listen: false,
+                                );
+                                profileTabProvider.getData();
 
                                 Navigator.of(context).pushNamed("/home");
                               } else {
@@ -139,8 +147,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   msg: res["message"].toString(),
                                 );
                               }
-                            } catch (e) {
-                              print(e.toString());
+                            } on AuthException catch (e) {
+                              Fluttertoast.showToast(
+                                msg: e.message.toString(),
+                              );
                             }
 
                             loginProvider.toggleLoading();

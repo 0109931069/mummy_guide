@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:mummy_guide/controllers/auth_controller.dart';
 
+/// Provider for managing profile tab state and user data.
 class ProfileTabProvider with ChangeNotifier {
   bool _isLoading = false;
   bool get isLoading => _isLoading;
@@ -17,13 +18,15 @@ class ProfileTabProvider with ChangeNotifier {
   String _phone = "0192398483484";
   String get phone => _phone;
 
-  toggleLoading() {
-    _isLoading = !_isLoading;
+  /// Toggles the loading state and notifies listeners.
+  void _setLoading(bool value) {
+    _isLoading = value;
     notifyListeners();
   }
 
+  /// Updates the user's profile picture URL.
   Future<void> updateUserProfilePicture(String url) async {
-    toggleLoading();
+    _setLoading(true);
 
     try {
       var res = await AuthController.updateCurrentUserData({
@@ -34,45 +37,42 @@ class ProfileTabProvider with ChangeNotifier {
         notifyListeners();
       }
     } catch (e) {
-      print(e.toString());
+      // Consider logging error instead of print
+    } finally {
+      _setLoading(false);
     }
-
-    toggleLoading();
   }
 
+  /// Fetches the current user data and updates the provider state.
   Future<void> getUserData() async {
     try {
       var res = await AuthController.getCurrentUserData();
       if (res["result"] == true) {
-        print("rrrrrrrrrrr$res");
         var userData = res["data"]["user_metadata"];
-        print(userData);
 
         _email = userData["email"].toString();
         _username = userData["fullName"].toString();
         _phone = userData["phone"].toString();
         _photoUrl =
             userData["picUrl"] == null ? "" : userData["picUrl"].toString();
-           
 
         notifyListeners();
       }
     } catch (e) {
-      print(e.toString());
+      // Consider logging error instead of print
     }
   }
 
+  /// Fetches user data and manages loading state.
   Future<void> getData() async {
-    _isLoading = true;
-    notifyListeners();
-    
+    _setLoading(true);
+
     try {
       await getUserData();
     } catch (e) {
-      print(e.toString());
+      // Consider logging error instead of print
+    } finally {
+      _setLoading(false);
     }
-
-    _isLoading = false;
-    notifyListeners();
   }
 }
