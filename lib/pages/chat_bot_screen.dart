@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:intl/intl.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+// import 'package:/lib/constants.dart';
 import 'package:mummy_guide/constants.dart';
 
 class ChatBotPage extends StatefulWidget {
@@ -18,7 +19,26 @@ class _ChatBotPageState extends State<ChatBotPage> {
   final List<Message> _messages = [];
 
   static const apiKey =
-      "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";
+      "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";
+
+  List<Map<String, String>> getChatHistory() {
+    List<Map<String, String>> history = [
+      {
+        "role": "system",
+        "content":
+            "أنت مساعد تربوي يساعد الأمهات ويقدم نصائح متصلة بناءً على سياق الحديث. قم بالرد بنفس لغة المستخدم.",
+      },
+    ];
+
+    for (var m in _messages) {
+      history.add({
+        "role": m.isUser ? "user" : "assistant",
+        "content": m.message,
+      });
+    }
+
+    return history;
+  }
 
   Future<void> sendMessage() async {
     final message = _userMessage.text.trim();
@@ -41,10 +61,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
       final body = jsonEncode({
         "model": "llama3-70b-8192",
         "messages": [
-          {
-            "role": "system",
-            "content": "Respond in the same language the user uses.",
-          },
+          ...getChatHistory(),
           {"role": "user", "content": message},
         ],
         "temperature": 0.7,
@@ -63,7 +80,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
         });
       } else {
         throw Exception(
-          "Status Code: \${response.statusCode}\n\${response.body}",
+          "Status Code: ${response.statusCode}\n${response.body}",
         );
       }
     } catch (e) {
@@ -71,7 +88,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
         _messages.add(
           Message(
             isUser: false,
-            message: "❌ Error: \${e.toString()}",
+            message: "❌ Error: ${e.toString()}",
             date: DateTime.now(),
           ),
         );
@@ -94,18 +111,18 @@ class _ChatBotPageState extends State<ChatBotPage> {
           children: [
             Container(
               padding: const EdgeInsets.only(right: 8),
-              child: const CircleAvatar(
+              child: CircleAvatar(
                 radius: 16,
                 backgroundColor: kBackgroundColor,
-                backgroundImage: AssetImage(
+                backgroundImage: const AssetImage(
                   'assets/images/2-removebg-preview (1) 1.png',
                 ),
               ),
             ),
-            const Column(
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'MummyGuide',
                   style: TextStyle(
                     color: Colors.pink,
@@ -114,7 +131,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   ),
                 ),
                 Row(
-                  children: [
+                  children: const [
                     Icon(Icons.circle, size: 8, color: Colors.green),
                     SizedBox(width: 4),
                     Text(
@@ -157,7 +174,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
                         borderSide: const BorderSide(color: kBackgroundColor),
                         borderRadius: BorderRadius.circular(50),
                       ),
-                      label: const Text("Ask ChatGPT..."),
+                      label: const Text("اسأل مامي جايد..."),
                     ),
                   ),
                 ),
@@ -166,7 +183,7 @@ class _ChatBotPageState extends State<ChatBotPage> {
                   padding: const EdgeInsets.all(15),
                   iconSize: 20,
                   style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all(const Color(0xffFF8EA2)),
+                    backgroundColor: WidgetStateProperty.all(Color(0xffFF8EA2)),
                     foregroundColor: WidgetStateProperty.all(Colors.white),
                     shape: WidgetStateProperty.all(const CircleBorder()),
                   ),
@@ -202,7 +219,7 @@ class Messages extends StatelessWidget {
         vertical: 15,
       ).copyWith(left: isUser ? 100 : 10, right: isUser ? 10 : 100),
       decoration: BoxDecoration(
-        color: isUser ? const Color(0xffFFC1CC) : Colors.grey.shade200,
+        color: isUser ? Color(0xffFFC1CC) : Colors.grey.shade200,
         borderRadius: BorderRadius.only(
           topLeft: const Radius.circular(30),
           bottomLeft: isUser ? const Radius.circular(30) : Radius.zero,

@@ -48,15 +48,21 @@ class _AllVideosPageState extends State<AllVideosPage> {
     try {
       final searchResults = await SearchService.searchVideos(query);
 
-      // نربط النتائج بالـ YoutubeVideoModel الموجود (لو العنوان مطابق)
       final matchedVideos =
-          allVideos.where((video) {
-            return searchResults.any(
-              (result) =>
-                  result["title"]!.toLowerCase().trim() ==
-                  video.title.toLowerCase().trim(),
-            );
-          }).toList();
+          searchResults
+              .map((result) {
+                try {
+                  return allVideos.firstWhere(
+                    (video) =>
+                        video.title.toLowerCase().trim() ==
+                        result["title"]!.toLowerCase().trim(),
+                  );
+                } catch (e) {
+                  return null;
+                }
+              })
+              .whereType<YoutubeVideoModel>()
+              .toList();
 
       setState(() {
         filteredVideos = matchedVideos;
@@ -114,7 +120,6 @@ class _AllVideosPageState extends State<AllVideosPage> {
           ),
         ],
       ),
-
       body: FutureBuilder<List<YoutubeVideoModel>>(
         future: _videosFuture,
         builder: (context, snapshot) {
@@ -135,7 +140,6 @@ class _AllVideosPageState extends State<AllVideosPage> {
                     onChanged: onSearchChanged,
                     decoration: InputDecoration(
                       hintText: '🔍 ابحثي عن مشكلة بتواجهك مع طفلك',
-
                       prefixIcon: const Icon(Icons.search),
                       suffixIcon: IconButton(
                         icon: const Icon(Icons.clear),
@@ -151,7 +155,6 @@ class _AllVideosPageState extends State<AllVideosPage> {
                   ),
                 ),
               ),
-
               if (isLoadingSearch)
                 const SliverToBoxAdapter(
                   child: Center(child: CircularProgressIndicator()),
